@@ -3,7 +3,6 @@ def pom
 def DOMAIN_NAME='test-domain'
 def ASADMIN
 def payaraBuildNumber
-def jdkVer = '8'
 pipeline {
     options {
         disableConcurrentBuilds()
@@ -11,6 +10,9 @@ pipeline {
     agent any
     environment {
         MP_METRICS_TAGS='tier=integration'
+    }
+    tools {
+        jdk "zulu-8"
     }
     stages {
         stage('Report') {
@@ -20,7 +22,6 @@ pipeline {
                     payaraBuildNumber = "${currentBuild.number}"
                     echo "Payara pom version is ${pom.version}"
                     echo "Build number is ${payaraBuildNumber}"
-                    echo "jdkVer = ${jdkVer}"
                 }
             }
         }
@@ -34,9 +35,6 @@ pipeline {
             }
         }
         stage('Build') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Building SRC  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh """mvn -B -V -ff -e clean install \
@@ -51,9 +49,6 @@ pipeline {
             }
         }
         stage('Setup for Quicklook Tests') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Setting up tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 script{
@@ -65,9 +60,6 @@ pipeline {
             }
         }
         stage('Run Quicklook Tests') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh """mvn -B -V -ff -e clean test \
@@ -97,9 +89,6 @@ pipeline {
             }
         }
         stage('Run EE8 Tests') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 //sh "mvn -B -V -ff -e clean install -Dsurefire.useFile=false -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/jre/lib/security/cacerts -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} -Dpayara.directory.name=payara5 -Dpayara.version.major=5 -Ppayara-ci-managed"
@@ -121,9 +110,6 @@ pipeline {
             }
         }
         stage('Run cargoTracker Tests Embedded') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 //sh """mvn -B -V -ff -e clean install -Dsurefire.useFile=false \
@@ -149,9 +135,6 @@ pipeline {
             }
         }
         stage('Run EE7 Tests') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 //sh """mvn -B -V -ff -e clean install -Dsurefire.useFile=false \
@@ -177,9 +160,6 @@ pipeline {
             }
         }
         stage('Run MicroProfile Config TCK') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running Config TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh "mvn -B -V -ff -e clean install -f MicroProfile-Config/tck-runner/pom.xml -Ppayara-micro-managed -Dpayara.version=${pom.version}"
@@ -187,9 +167,6 @@ pipeline {
             }
         }
         stage('Run MicroProfile Fault Tolerance TCK') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running Fault Tolerance TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh "mvn -B -V -ff -e clean install -f MicroProfile-Fault-Tolerance/tck-runner/pom.xml -Ppayara-micro-managed -Dpayara.version=${pom.version}"
@@ -197,9 +174,6 @@ pipeline {
             }
         }
         stage('Run MicroProfile Health TCK') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Installing MP Health TCK Arquillian Extension  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh "mvn -B -V -ff -e clean install -f MicroProfile-Health/payara-health-arquillian-extension/pom.xml -Dpayara.version=${pom.version}"
@@ -211,9 +185,6 @@ pipeline {
             }
         }
         stage('Run MicroProfile JWT-Auth TCK') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Installing MP JWT-Auth TCK Arquillian Extension  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh "mvn -B -V -ff -e clean install -f MicroProfile-JWT-Auth/payara-jwt-auth-arquillian-extension/pom.xml -Dpayara.version=${pom.version}"
@@ -225,9 +196,6 @@ pipeline {
             }
         }
         stage('Run MicroProfile Metrics TCK') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running Metrics TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh "mvn -B -V -ff -e clean install -f MicroProfile-Metrics/tck-runner/pom.xml -Ppayara-micro-managed -Dpayara.version=${pom.version}"
@@ -235,9 +203,6 @@ pipeline {
             }
         }
         stage('Run MicroProfile OpenAPI TCK') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running OpenAPI TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh "mvn -B -V -ff -e clean install -f MicroProfile-OpenAPI/tck-runner/pom.xml -Ppayara-micro-managed -Dpayara.version=${pom.version}"
@@ -245,9 +210,6 @@ pipeline {
             }
         }
         stage('Run MicroProfile OpenTracing TCK') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running OpenTracing TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh "mvn -B -V -ff -e clean install -f MicroProfile-OpenTracing/tck-runner/pom.xml -Ppayara-micro-managed -Dpayara.version=${pom.version}"
@@ -255,9 +217,6 @@ pipeline {
             }
         }
         stage('Run MicroProfile Rest Client TCK') {
-            tools {
-                jdk "zulu-${jdkVer}"
-            }
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running Rest Client TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh "mvn -B -V -ff -e clean install -f MicroProfile-Rest-Client/tck-runner/pom.xml -Ppayara-micro-managed -Dpayara.version=${pom.version}"
