@@ -184,17 +184,17 @@ pipeline {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran Health TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
             }
         }
-        stage('Run MicroProfile JWT-Auth TCK') {
-            steps {
-                echo '*#*#*#*#*#*#*#*#*#*#*#*#  Installing MP JWT-Auth TCK Arquillian Extension  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                sh "mvn -B -V -ff -e clean install -f MicroProfile-JWT-Auth/payara-jwt-auth-arquillian-extension/pom.xml -Dpayara.version=${pom.version}"
-                echo '*#*#*#*#*#*#*#*#*#*#*#*#  Installed MP JWT-Auth TCK Arquillian Extension  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-            
-                echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running JWT-Auth TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                sh "mvn -B -V -ff -e clean install -f MicroProfile-JWT-Auth/tck-runner/pom.xml -Ppayara-micro-managed,full -Dpayara.version=${pom.version}"
-                echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran JWT-Auth TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-            }
-        }
+        //stage('Run MicroProfile JWT-Auth TCK') {
+        //    steps {
+        //        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Installing MP JWT-Auth TCK Arquillian Extension  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
+        //        sh "mvn -B -V -ff -e clean install -f MicroProfile-JWT-Auth/payara-jwt-auth-arquillian-extension/pom.xml -Dpayara.version=${pom.version}"
+        //        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Installed MP JWT-Auth TCK Arquillian Extension  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
+        //    
+        //        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running JWT-Auth TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
+        //        sh "mvn -B -V -ff -e clean install -f MicroProfile-JWT-Auth/tck-runner/pom.xml -Ppayara-micro-managed,full -Dpayara.version=${pom.version}"
+        //        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran JWT-Auth TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
+        //    }
+        //}
         stage('Run MicroProfile Metrics TCK') {
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running Metrics TCK  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
